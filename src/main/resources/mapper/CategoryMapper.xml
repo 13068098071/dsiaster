@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ma.disaster.mapper.CategoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ma.disaster.pojo.Category">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="remark" property="remark" />
+        <result column="status" property="status" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="pid" property="pid" />
+    </resultMap>
+    
+    <resultMap id="CategoryWithChildren" type="com.ma.disaster.pojo.Category" extends="BaseResultMap">
+        <collection property="children" ofType="com.ma.disaster.pojo.Category" select="com.ma.disaster.mapper.CategoryMapper.getAllCategory" column="id"></collection>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, remark, status, sort, create_time, modified_time, pid
+    </sql>
+    <select id="getAllCategory" resultMap="CategoryWithChildren">
+        select
+        <include refid="Base_Column_List"/>
+        from p_category
+        where pid = #{pid}
+    </select>
+    <select id="categoryTree" resultType="com.ma.disaster.vo.ProductCategoryTreeNodeVO">
+        select c1.name name1,c2.name name2,c3.name name3
+        from
+            p_category c1,
+            p_category c2,
+            p_category c3
+        where c1.id = c2.pid and c2.id = c3.pid
+
+    </select>
+    <select id="getCategoryByPid" resultType="com.ma.disaster.pojo.Category">
+        select * from p_category where pid = #{id}
+    </select>
+
+</mapper>

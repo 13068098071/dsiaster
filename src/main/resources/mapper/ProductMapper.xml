@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ma.disaster.mapper.ProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ma.disaster.pojo.Product">
+        <result column="id" property="id" />
+        <result column="p_num" property="pNum" />
+        <result column="name" property="name" />
+        <result column="image_url" property="imageUrl" />
+        <result column="model" property="model" />
+        <result column="unit" property="unit" />
+        <result column="remark" property="remark" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+        <result column="modified_time" property="modifiedTime" />
+        <result column="one_category_id" property="oneCategoryId" />
+        <result column="two_category_id" property="twoCategoryId" />
+        <result column="three_category_id" property="threeCategoryId" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, p_num, name, image_url, model, unit, remark, sort, create_time, modified_time, one_category_id, two_category_id, three_category_id, status
+    </sql>
+
+</mapper>

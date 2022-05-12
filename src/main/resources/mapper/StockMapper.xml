@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ma.disaster.mapper.StockMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ma.disaster.pojo.Stock">
+        <id column="id" property="id" />
+        <result column="p_num" property="pNum" />
+        <result column="stock" property="stock" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, p_num, stock
+    </sql>
+    <select id="findProductStocks" parameterType="com.ma.disaster.vo.ProductStockVO"
+            resultType="com.ma.disaster.vo.ProductStockVO">
+        SELECT p.id,p.name,p.model,p.remark,s.stock,p.image_url imageUrl,p.p_num pNum,p.unit
+        FROM p_stock s
+        , m_product p WHERE s.`p_num`=p.`p_num` and s.`stock`>0
+        <if test="productVO.name!=null and productVO.name!=''">
+            and p.name like concat('%',#{productVO.name}, '%')
+        </if>
+        <choose>
+            <when test="productVO.threeCategoryId != null and productVO.threeCategoryId !=''">
+                and p.three_category_id =#{productVO.threeCategoryId}
+            </when>
+            <when test="productVO.twoCategoryId != null and productVO.twoCategoryId !=''">
+                and p.two_category_id =#{productVO.twoCategoryId}
+            </when>
+            <when test="productVO.oneCategoryId != null and productVO.oneCategoryId !=''">
+                and p.one_category_id =#{productVO.oneCategoryId}
+            </when>
+        </choose>
+    </select>
+    <select id="findAllStocks" resultType="com.ma.disaster.vo.ProductStockVO">
+        SELECT s.`p_num` pNum,s.stock ,p.name,p.id,
+        p.model,p.unit
+        FROM p_stock s
+        , m_product p WHERE s.`p_num`=p.`p_num`
+        <if test="productVO.name!=null and productVO.name!=''">
+            and p.name like concat('%',#{productVO.name}, '%')
+        </if>
+        <choose>
+            <when test="productVO.threeCategoryId != null and productVO.threeCategoryId !=''">
+                and p.three_category_id =#{productVO.threeCategoryId}
+            </when>
+            <when test="productVO.twoCategoryId != null and productVO.twoCategoryId !=''">
+                and p.two_category_id =#{productVO.twoCategoryId}
+            </when>
+            <when test="productVO.oneCategoryId != null and productVO.oneCategoryId !=''">
+                and p.one_category_id =#{productVO.oneCategoryId}
+            </when>
+        </choose>
+    </select>
+
+</mapper>

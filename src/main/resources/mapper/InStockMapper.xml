@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ma.disaster.mapper.InStockMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ma.disaster.pojo.InStock">
+        <id column="id" property="id" />
+        <result column="in_num" property="inNum" />
+        <result column="type" property="type" />
+        <result column="operator" property="operator" />
+        <result column="create_time" property="createTime" />
+        <result column="modified" property="modified" />
+        <result column="product_number" property="productNumber" />
+        <result column="supplier_id" property="supplierId" />
+        <result column="remark" property="remark" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, in_num, type, operator, create_time, modified, product_number, supplier_id, remark, status
+    </sql>
+    <select id="findInStockList" resultType="com.ma.disaster.vo.InStockVO"
+    parameterType="com.ma.disaster.vo.InStockVO">
+        select i.id,i.in_num inNum,i.type,i.operator,i.supplier_id supplierId,i.modified,i.product_number productNumber,
+             i.remark,i.status,i.create_time createTime,
+             s.phone,s.`name` supplierName,s.address,s.email,s.sort,s.contact
+        from p_supplier s,p_in_stock i
+        where i.supplier_id = s.id
+        <if test="inStockVo.inNum != null and inStockVo.inNum != ''">
+            and i.in_num like concat('%',#{inStockVo.inNum},'%')
+        </if>
+        <if test="inStockVo.type != null">
+            and i.type = #{inStockVo.type}
+        </if>
+        <if test="inStockVo.status != null">
+            and i.status = #{inStockVo.status}
+        </if>
+        <if test="inStockVo.startTime != null">
+            and i.create_time &gt; #{inStockVo.startTime}
+        </if>
+        <if test="inStockVo.endTime != null">
+            and i.create_time &lt; #{inStockVo.endTime}
+        </if>
+    </select>
+
+    <select id="findInStockExport" resultType="com.ma.disaster.vo.InStockVO">
+        select i.id,i.in_num inNum,i.type,i.operator,i.supplier_id supplierId,i.modified,i.product_number productNumber,
+        i.remark,i.status,i.create_time createTime,
+        s.phone,s.`name` supplierName,s.address,s.email,s.sort,s.contact
+        from p_supplier s,p_in_stock i
+        where i.supplier_id = s.id
+    </select>
+</mapper>

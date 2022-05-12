@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ma.disaster.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ma.disaster.pojo.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="nickname" property="nickname" />
+        <result column="email" property="email" />
+        <result column="avatar" property="avatar" />
+        <result column="phone_number" property="phoneNumber" />
+        <result column="status" property="status" />
+        <result column="sex" property="sex" />
+        <result column="type" property="type" />
+        <result column="password" property="password" />
+        <result column="birth" property="birth" />
+        <result column="department_id" property="departmentId" />
+        <result column="role" property="role"/>
+    </resultMap>
+
+    <resultMap id="UserInfo" type="com.ma.disaster.pojo.User" extends="BaseResultMap">
+        <association property="department" javaType="com.ma.disaster.pojo.Department">
+            <!--<id column="department_id" property="id"></id>-->
+            <result column="dName" property="name"></result>
+            <result column="dPhone" property="phone"></result>
+            <result column="dAddress" property="address"></result>
+        </association>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username,enabled, nickname, email, avatar, phone_number, status, create_time, modified_time, sex, type, password, birth, department_id,role
+    </sql>
+    <select id="getDepartmentPersonCount" resultType="java.lang.Integer">
+        select count(department_id) from m_user where status = 1 and department_id = #{id} group by department_id
+    </select>
+    <select id="getUser" resultMap="UserInfo">
+        select u.*,d.`name` dName,d.phone dPhone,d.address dAddress
+        from
+            m_user u,
+            m_department d
+        where
+            u.department_id = d.id
+    </select>
+    <select id="findUserByPage" resultMap="UserInfo">
+        select u.*,d.`name` dName,d.phone dPhone,d.address dAddress
+        from
+            m_user u,
+            m_department d
+        where
+            u.department_id = d.id
+            and u.status = 1
+            <if test="username != null and username != ''">
+                AND u.username = #{username}
+            </if>
+            <if test="email != null and email != ''">
+                AND u.email = #{email}
+            </if>
+            <if test="sex != null">
+                AND u.sex = #{sex}
+            </if>
+            <if test="departmentId != null">
+                AND u.department_id = #{departmentId}
+            </if>
+    </select>
+
+</mapper>

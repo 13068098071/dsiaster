@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ma.disaster.mapper.OutStockMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ma.disaster.pojo.OutStock">
+        <id column="id" property="id" />
+        <result column="out_num" property="outNum" />
+        <result column="type" property="type" />
+        <result column="operator" property="operator" />
+        <result column="create_time" property="createTime" />
+        <result column="product_number" property="productNumber" />
+        <result column="consumer_id" property="consumerId" />
+        <result column="remark" property="remark" />
+        <result column="status" property="status" />
+        <result column="priority" property="priority" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, out_num, type, operator, create_time, product_number, consumer_id, remark, status, priority
+    </sql>
+    <select id="findOutStockList" resultType="com.ma.disaster.vo.OutStockVO"
+    parameterType="com.ma.disaster.vo.OutStockVO">
+        select i.id,i.out_num outNum,i.type,i.operator,i.consumer_id consumerId,i.product_number productNumber,
+        i.remark,i.status,i.create_time createTime,i.priority,
+        s.phone,s.`name`,s.address,s.sort,s.contact
+        from p_consumer s,p_out_stock i
+        where i.consumer_id = s.id
+        <if test="outStockVO.outNum != null and outStockVO.outNum != ''">
+            and i.out_num like concat('%',#{outStockVO.outNum},'%')
+        </if>
+        <if test="outStockVO.type != null">
+            and i.type = #{outStockVO.type}
+        </if>
+        <if test="outStockVO.status != null">
+            and i.status = #{outStockVO.status}
+        </if>
+    </select>
+
+</mapper>

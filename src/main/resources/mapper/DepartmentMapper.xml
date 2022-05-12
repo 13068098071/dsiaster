@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ma.disaster.mapper.DepartmentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ma.disaster.pojo.Department">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="phone" property="phone" />
+        <result column="address" property="address" />
+        <result column="create_time" property="createTime" />
+        <result column="modified_time" property="modifiedTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, phone, address, create_time, modified_time
+    </sql>
+    <select id="getDepartmentByPage" resultMap="com.ma.disaster.mapper.UserMapper.BaseResultMap">
+        select * from m_department
+        <where>
+            status = 1
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name} ,'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>
